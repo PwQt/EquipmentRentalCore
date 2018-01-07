@@ -38,10 +38,6 @@ namespace EquipmentRentalCore.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Rentals()
-        {
-            return View(await _context.Rentals.ToListAsync());
-        }
 
         public IActionResult Error()
         {
