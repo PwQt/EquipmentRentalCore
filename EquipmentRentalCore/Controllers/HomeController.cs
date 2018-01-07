@@ -5,11 +5,20 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using EquipmentRentalCore.Models;
+using EquipmentRentalCore.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace EquipmentRentalCore.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly EquipmentRentalContext _context;
+
+        public HomeController(EquipmentRentalContext context)
+        {
+            _context = context;
+        }
+
         public IActionResult Index()
         {
             return View();
@@ -27,6 +36,11 @@ namespace EquipmentRentalCore.Controllers
             ViewData["Message"] = "Your contact page.";
 
             return View();
+        }
+
+        public async Task<IActionResult> Rentals()
+        {
+            return View(await _context.Rentals.ToListAsync());
         }
 
         public IActionResult Error()
