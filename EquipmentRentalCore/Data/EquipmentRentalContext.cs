@@ -18,6 +18,7 @@ namespace EquipmentRentalCore.Data
         public DbSet<EquipmentType> EquipmentTypes { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Rental> Rentals { get; set; }
+        public DbSet<Room> Rooms { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -25,6 +26,7 @@ namespace EquipmentRentalCore.Data
             modelBuilder.Entity<EquipmentType>().ToTable("EquipmentTypes");
             modelBuilder.Entity<User>().ToTable("Users");
             modelBuilder.Entity<Rental>().ToTable("Rentals");
+            modelBuilder.Entity<Room>().ToTable("Rooms");
         }
     }
 }

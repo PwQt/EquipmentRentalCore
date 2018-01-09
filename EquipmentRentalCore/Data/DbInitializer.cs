@@ -39,7 +39,7 @@ namespace EquipmentRentalCore.Data
 
             var equipments = new Models.Equipment[]
             {
-                new Models.Equipment(){ EquipmentName = "Sprzęcior", EquipmentTypeID = 1 }
+                new Models.Equipment(){ EquipmentName = "Sprzęcior", EquipmentTypeID = 1, RoomID = 3 }
             };
 
             foreach (var item in equipments)
@@ -55,6 +55,16 @@ namespace EquipmentRentalCore.Data
 
             foreach (var item in rentals)
                 context.Rentals.Add(item);
+
+            context.SaveChanges();
+
+            var rooms = new Models.Room[]
+            {
+                new Models.Room() {Name = "Pokój 303"}, new Models.Room() {Name = "Schowek"}, new Models.Room() { Name = "Garaż"}
+            };
+
+            foreach (var item in rooms)
+                context.Rooms.Add(item);
 
             context.SaveChanges();
         }

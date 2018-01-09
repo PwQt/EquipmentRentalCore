@@ -14,8 +14,10 @@ namespace EquipmentRentalCore.Models
         
         public int? RentID { get; set; }
         public int EquipmentTypeID { get; set; }
+        public int RoomID { get; set; }
 
         public EquipmentType EquipmentType { get; set; }
         public Rental Rental { get; set; }
+        public Room Room { get; set; }
     }
 }
