@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EquipmentRentalCore.Models;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -25,6 +26,32 @@ namespace EquipmentRentalCore.Controllers
 
         [HttpGet]
         [AllowAnonymous]
+        public async Task<IActionResult> Login(string returnUrl = null)
+        {
+            await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+
+            ViewData["ReturnUrl"] = returnUrl;
+            return View();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> Login(Models.AccountViewModels.LoginViewModel model, string returnUrl = null)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _signInManager.PasswordSignInAsync(model.Login, model.Password, model.RememberLogin, lockoutOnFailure: false);
+                if (result.Succeeded)
+                {
+                    _logger.LogInformation("User has been logged");
+                    return RedirectToAction("Home", "Index");
+                }
+            }
+            return View();
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Register(string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
@@ -41,7 +68,6 @@ namespace EquipmentRentalCore.Controllers
                 var user = new User
                 {
                     UserName = registerViewModel.Login
-
                 };
                 if (registerViewModel.Password == registerViewModel.ConfirmPassword)
                 {
