@@ -88,7 +88,12 @@ namespace EquipmentRentalCore.Controllers
                     if (result.Succeeded)
                     {
                         await _signInManager.SignInAsync(user, isPersistent: false);
-                        return RedirectToAction(nameof(HomeController.Index));
+                        return RedirectToAction("Index", "Home");
+                    }
+                    else if (result.Errors.Count() > 0)
+                    {
+                        foreach (var item in result.Errors)
+                            ModelState.AddModelError(string.Empty, item.Description);
                     }
                 }
                 else

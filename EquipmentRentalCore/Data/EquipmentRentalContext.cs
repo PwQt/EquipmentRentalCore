@@ -18,7 +18,6 @@ namespace EquipmentRentalCore.Data
         
         public DbSet<Equipment> Equipments { get; set; }
         public DbSet<EquipmentType> EquipmentTypes { get; set; }
-        //public new DbSet<User> Users { get; set; }
         public DbSet<Rental> Rentals { get; set; }
         public DbSet<Room> Rooms { get; set; }
 
