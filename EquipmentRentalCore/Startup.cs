@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EquipmentRentalCore.Data;
+using EquipmentRentalCore.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,6 +27,11 @@ namespace EquipmentRentalCore
         {
             services.AddDbContext<EquipmentRentalContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddIdentity<User, ApplicationRole>()
+                .AddEntityFrameworkStores<EquipmentRentalContext>()
+                .AddDefaultTokenProviders();
+            
             services.AddMvc();
         }
 
@@ -36,12 +43,14 @@ namespace EquipmentRentalCore
                 app.UseDeveloperExceptionPage();
                 app.UseBrowserLink();
             }
-            else
+            else 
             {
                 app.UseExceptionHandler("/Home/Error");
             }
 
             app.UseStaticFiles();
+
+            app.UseAuthentication();
 
             app.UseMvc(routes =>
             {

@@ -14,17 +14,6 @@ namespace EquipmentRentalCore.Data
             if (context.Equipments.Any())
                 return;
 
-            var users = new Models.User[]
-            {
-                new Models.User(){Login="Admin", Password="Admin",Name="Paweł", Surname="Kucia"}
-            };
-
-            foreach (var item in users)
-                context.Users.Add(item);
-
-            context.SaveChanges();
-
-
             var equipmentTypes = new Models.EquipmentType[]
             {
                 new Models.EquipmentType(){TypeName="Telefon"},
@@ -45,17 +34,6 @@ namespace EquipmentRentalCore.Data
             foreach (var item in equipments)
                 context.Equipments.Add(item);
             
-            context.SaveChanges();
-
-
-            var rentals = new Models.Rental[]
-            {
-                new Models.Rental(){RentalStart=new DateTime(2017,08,08), RentalEnd=new DateTime(2017,09,08), RentalEquipmentID=1, RentalUserID=1}
-            };
-
-            foreach (var item in rentals)
-                context.Rentals.Add(item);
-
             context.SaveChanges();
 
             var rooms = new Models.Room[]

@@ -7,23 +7,19 @@ using Microsoft.AspNetCore.Mvc;
 using EquipmentRentalCore.Models;
 using EquipmentRentalCore.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EquipmentRentalCore.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly EquipmentRentalContext _context;
-
-        public HomeController(EquipmentRentalContext context)
-        {
-            _context = context;
-        }
 
         public IActionResult Index()
         {
             return View();
         }
 
+        [Authorize]
         public IActionResult About()
         {
             ViewData["Message"] = "Your application description page.";
