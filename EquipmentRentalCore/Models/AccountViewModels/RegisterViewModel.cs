@@ -8,16 +8,16 @@ namespace EquipmentRentalCore.Models.AccountViewModels
 {
     public class RegisterViewModel
     {
-        [Display(Name = "Nazwa użytkownika")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Wymagane jest podanie nazwy użytkownika!")]
+        [Display(Name = "Username")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "It is required to provide username")]
         public string Login { get; set; }
-        [Display(Name = "Hasło"), StringLength(20)]
+        [Display(Name = "Password"), StringLength(20)]
         [DataType(DataType.Password)]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Wymagane jest podanie hasła!")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "It is required to provide password")]
         public string Password { get; set; }
-        [Display(Name = "Potwierdzenie hasła"), StringLength(20)]
+        [Display(Name = "Password confirmation"), StringLength(20)]
         [DataType(DataType.Password)]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Wymagane jest potwierdzenie hasła!")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "It is required to provide password confirmation!")]
         public string ConfirmPassword { get; set; }
     }
 }

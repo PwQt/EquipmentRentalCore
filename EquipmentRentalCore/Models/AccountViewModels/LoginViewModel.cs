@@ -8,18 +8,18 @@ namespace EquipmentRentalCore.Models.AccountViewModels
 {
     public class LoginViewModel
     {
-        [Display(Name = "Nazwa użytkownika")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Wymagane jest podanie nazwy użytkownika")]
-        [StringLength(20, ErrorMessage = "Za długa nazwa użytkownika")]
+        [Display(Name = "Username")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "It is required to provide your username")]
+        [StringLength(20, ErrorMessage = "The provided username is too long")]
         public string Login { get; set; }
 
-        [Display(Name = "Hasło")]
+        [Display(Name = "Password")]
         [DataType(DataType.Password)]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Wymagane jest podanie hasła")]
-        [StringLength(20, MinimumLength = 8, ErrorMessage = "Nieprawidłowa długość hasła")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "It is required to provide your password")]
+        [StringLength(20, MinimumLength = 8, ErrorMessage = "The password you have provided is too long or too short, it needs to be between 8 and 20 signs")]
         public string Password { get; set; }
 
-        [Display(Name = "Zapamiętaj logowanie")]
+        [Display(Name = "Remember login")]
         public bool RememberLogin { get; set; }
     }
 }
