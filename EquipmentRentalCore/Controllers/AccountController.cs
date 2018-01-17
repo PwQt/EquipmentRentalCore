@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging;
 
 namespace EquipmentRentalCore.Controllers
 {
+    [Authorize]
     public class AccountController : Controller
     {
         private readonly UserManager<User> _userManager;
@@ -43,16 +44,25 @@ namespace EquipmentRentalCore.Controllers
                 var result = await _signInManager.PasswordSignInAsync(model.Login, model.Password, model.RememberLogin, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("User has been logged");
-                    return RedirectToAction("Home", "Index");
-                }
+                    _logger.LogInformation("User has been logged in");
+                    return RedirectToAction("Index", "Home");
+                } 
             }
-            return View();
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            _logger.LogInformation("User has been logged out");
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> Register(string returnUrl = null)
+        public IActionResult Register(string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
             return View();

@@ -33,12 +33,22 @@
                     <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
                     <li><a asp-area="" asp-controller="Rental" asp-action="Index">Rentals</a></li>
-                    @if (!User.Identity.IsAuthenticated)
-                    {
-                    <li><a asp-area="" asp-controller="Account" asp-action="Login">Login</a></li>
-                    <li><a asp-area="" asp-controller="Account" asp-action="Register">Register</a></li>
-                    }
                 </ul>
+                @if (!User.Identity.IsAuthenticated)
+                {
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a asp-area="" asp-controller="Account" asp-action="Login">Login</a></li>
+                        <li><a asp-area="" asp-controller="Account" asp-action="Register">Register</a></li>
+                    </ul>
+                }
+                else
+                {
+                    <form method="post" asp-controller="Account" asp-action="Logout">
+                        <ul class="nav navbar-nav navbar-right">
+                            <li><input class="btn btn-link navbar-btn navbar-link" style="text-decoration:none;" type="submit" value="Logout"/> </li>
+                        </ul>
+                    </form>
+                }
             </div>
         </div>
     </nav>
