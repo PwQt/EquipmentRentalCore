@@ -92,11 +92,36 @@ namespace EquipmentRentalCore.Controllers
                 var result = await _context.SaveChangesAsync();
                 if (result > 0)
                     return RedirectToAction("Index");
-                else
-                    return NotFound();
             }
             return NotFound();
+        }
 
+        [Authorize]
+        [HttpGet]
+        public IActionResult Create(string returnUrl = null)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+            return View(new ManageEquipmentTypeModel());
+        }
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(ManageEquipmentTypeModel model, string returnUrl = null)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+            if (ModelState.IsValid)
+            {
+                var elementToAdd = new EquipmentType
+                {
+                    TypeName = model.Name
+                };
+                await _context.EquipmentTypes.AddAsync(elementToAdd);
+                var result = await _context.SaveChangesAsync();
+                if (result > 0)
+                    return RedirectToAction("Index");
+            }
+            return View(model);
         }
     }
 }
