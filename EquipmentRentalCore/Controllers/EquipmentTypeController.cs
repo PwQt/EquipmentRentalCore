@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using EquipmentRentalCore.Data;
 using EquipmentRentalCore.Models;
 using EquipmentRentalCore.Models.EquipmentTypeViewModel;
 using Microsoft.AspNetCore.Authorization;
@@ -45,15 +44,22 @@ namespace EquipmentRentalCore.Controllers
         {
             ViewData["ReturnUrl"] = returnUrl;
             var element = await _context.EquipmentTypes.FirstOrDefaultAsync(x => x.TypeID.Equals(id));
-
-            var item = new ManageEquipmentTypeModel
+            if (element != null)
             {
-                Id = element.TypeID,
-                Name = element.TypeName
-            };
-            return View(item);
+                var item = new ManageEquipmentTypeModel
+                {
+                    Id = element.TypeID,
+                    Name = element.TypeName
+                };
+                return View(item);
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(ManageEquipmentTypeModel model, string returnUrl = null)
@@ -66,11 +72,31 @@ namespace EquipmentRentalCore.Controllers
                 _context.Entry(elementToModify).State = EntityState.Modified;
                 var result = await _context.SaveChangesAsync();
                 if (result > 0)
-                {
                     return RedirectToAction("Index");
-                }
+                else
+                    ModelState.AddModelError("", "Errors during saving of elements - please check!");
             }
             return View(model);
+        }
+
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id, string returnUrl = null)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+            var elementToDelete = await _context.EquipmentTypes.FirstOrDefaultAsync(x => x.TypeID.Equals(id));
+
+            if (elementToDelete != null)
+            {
+                _context.EquipmentTypes.Remove(elementToDelete);
+                var result = await _context.SaveChangesAsync();
+                if (result > 0)
+                    return RedirectToAction("Index");
+                else
+                    return NotFound();
+            }
+            return NotFound();
+
         }
     }
 }

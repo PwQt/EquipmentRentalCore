@@ -11,8 +11,8 @@ using System;
 namespace EquipmentRentalCore.Migrations
 {
     [DbContext(typeof(EquipmentRentalContext))]
-    [Migration("20180118173056_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20180118185003_DatabaseFixes")]
+    partial class DatabaseFixes
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -168,7 +168,7 @@ namespace EquipmentRentalCore.Migrations
                         .HasName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.ToTable("Users");
+                    b.ToTable("AspNetUsers");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -257,12 +257,12 @@ namespace EquipmentRentalCore.Migrations
                     b.HasOne("EquipmentRentalCore.Models.EquipmentType", "EquipmentType")
                         .WithMany("Equipments")
                         .HasForeignKey("EquipmentTypeID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("EquipmentRentalCore.Models.Room", "Room")
-                        .WithMany()
+                        .WithMany("Equipments")
                         .HasForeignKey("RoomID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("EquipmentRentalCore.Models.Rental", b =>
@@ -273,9 +273,9 @@ namespace EquipmentRentalCore.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("EquipmentRentalCore.Models.User", "RentalUser")
-                        .WithMany()
+                        .WithMany("Rentals")
                         .HasForeignKey("RentalUserID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
