@@ -14,7 +14,6 @@ namespace EquipmentRentalCore.Models
         {
 
         }
-
         
         public DbSet<Equipment> Equipments { get; set; }
         public DbSet<EquipmentType> EquipmentTypes { get; set; }
@@ -49,6 +48,7 @@ namespace EquipmentRentalCore.Models
                 .WithMany(r => r.Equipments)
                 .HasForeignKey(x => x.RoomID)
                 .OnDelete(DeleteBehavior.Restrict);
+
         }
 
     }

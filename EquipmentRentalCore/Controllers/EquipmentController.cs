@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EquipmentRentalCore.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -34,7 +35,38 @@ namespace EquipmentRentalCore.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(int id)
+        {
+            return View();
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> Edit(int id)
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> Delete()
         {
             return View();
         }
