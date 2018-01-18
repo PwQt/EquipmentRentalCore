@@ -17,6 +17,7 @@ namespace EquipmentRentalCore.Controllers
             _context = context;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var rentals = await _context.Rentals
@@ -27,6 +28,7 @@ namespace EquipmentRentalCore.Controllers
             return View(rentals);
         }
 
+        [HttpPost]
         public async Task<IActionResult> Details(int? id)
         {
             if (!id.HasValue)

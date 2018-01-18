@@ -12,5 +12,7 @@ namespace EquipmentRentalCore.Models
         public string Password { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
+
+        public ICollection<Rental> Rentals { get; set; }
     }
 }

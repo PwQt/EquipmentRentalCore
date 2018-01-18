@@ -25,13 +25,30 @@ namespace EquipmentRentalCore.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Equipment>().ToTable("Equipments");
-            modelBuilder.Entity<EquipmentType>().ToTable("EquipmentTypes");
-            modelBuilder.Entity<User>().ToTable("Users");
             modelBuilder.Entity<User>()
                 .HasKey(x => x.Id);
-            modelBuilder.Entity<Rental>().ToTable("Rentals");
-            modelBuilder.Entity<Room>().ToTable("Rooms");
+
+            modelBuilder.Entity<Rental>()
+                .HasOne(x => x.RentalUser)
+                .WithMany(u => u.Rentals)
+                .HasForeignKey(x => x.RentalUserID)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Rental>()
+                .HasOne(x => x.RentalEquipment)
+                .WithOne(e => e.Rental);
+
+            modelBuilder.Entity<Equipment>()
+                .HasOne(x => x.EquipmentType)
+                .WithMany(t => t.Equipments)
+                .HasForeignKey(x => x.EquipmentTypeID)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Equipment>()
+                .HasOne(x => x.Room)
+                .WithMany(r => r.Equipments)
+                .HasForeignKey(x => x.RoomID)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

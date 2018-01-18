@@ -43,7 +43,7 @@
                 {
                     <form method="post" asp-controller="Account" asp-action="Logout">
                         <ul class="nav navbar-nav navbar-right">
-                            <li>Witaj - @User.Identity.Name</li>
+                            <li class="btn navbar-btn navbar-link">Witaj - @User.Identity.Name</li>
                             <li><a asp-area="" asp-controller="Account" asp-action="Manage">Manage your account</a></li>
                             <li><input class="btn btn-link navbar-btn navbar-link" style="text-decoration:none;" type="submit" value="Logout"/> </li>
                         </ul>
