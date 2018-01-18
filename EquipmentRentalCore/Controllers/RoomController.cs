@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using EquipmentRentalCore.Models.RoomViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EquipmentRentalCore.Controllers
 {
@@ -40,5 +41,92 @@ namespace EquipmentRentalCore.Controllers
 
             return View(elements);
         }
+
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id, string returnUrl = null)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+            var element = await _context.Rooms.FirstOrDefaultAsync(x => x.Id.Equals(id));
+            if (element != null)
+            {
+                var item = new ManageRoomsModel
+                {
+                    Id = element.Id,
+                    Name = element.Name
+                };
+                return View(item);
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(ManageRoomsModel model, string returnUrl = null)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+            if (ModelState.IsValid)
+            {
+                var elementToModify = await _context.Rooms.FirstOrDefaultAsync(x => x.Id.Equals(model.Id));
+                elementToModify.Name = model.Name;
+                _context.Entry(elementToModify).State = EntityState.Modified;
+                var result = await _context.SaveChangesAsync();
+                if (result > 0)
+                    return RedirectToAction("Index");
+                else
+                    ModelState.AddModelError("", "Errors during saving of elements - please check!");
+            }
+            return View(model);
+        }
+
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id, string returnUrl = null)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+            var elementToDelete = await _context.Rooms.FirstOrDefaultAsync(x => x.Id.Equals(id));
+
+            if (elementToDelete != null)
+            {
+                _context.Rooms.Remove(elementToDelete);
+                var result = await _context.SaveChangesAsync();
+                if (result > 0)
+                    return RedirectToAction("Index");
+            }
+            return NotFound();
+        }
+
+        [Authorize]
+        [HttpGet]
+        public IActionResult Create(string returnUrl = null)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+            return View(new ManageRoomsModel());
+        }
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(ManageRoomsModel model, string returnUrl = null)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+            if (ModelState.IsValid)
+            {
+                var elementToAdd = new Room
+                {
+                    Name = model.Name
+                };
+                await _context.Rooms.AddAsync(elementToAdd);
+                var result = await _context.SaveChangesAsync();
+                if (result > 0)
+                    return RedirectToAction("Index");
+            }
+            return View(model);
+        }
+
     }
 }
