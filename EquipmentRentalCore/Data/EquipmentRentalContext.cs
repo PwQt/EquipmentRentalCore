@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EquipmentRentalCore.Models.EquipmentTypeViewModel;
 
 namespace EquipmentRentalCore.Data
 {
@@ -50,5 +51,9 @@ namespace EquipmentRentalCore.Data
                 .HasForeignKey(x => x.RoomID)
                 .OnDelete(DeleteBehavior.Restrict);
         }
+
+        public DbSet<EquipmentRentalCore.Models.EquipmentTypeViewModel.ListEquipmentTypeViewModel> ListEquipmentTypeViewModel { get; set; }
+
+        public DbSet<EquipmentRentalCore.Models.EquipmentTypeViewModel.ManageEquipmentTypeModel> ManageEquipmentTypeModel { get; set; }
     }
 }

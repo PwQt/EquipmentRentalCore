@@ -14,11 +14,14 @@ namespace EquipmentRentalCore.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly EquipmentRentalContext _context;
+
         public EquipmentController(UserManager<User> userManager, EquipmentRentalContext context)
         {
             _userManager = userManager;
             _context = context;
         }
+
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var equipmentList = await _context
@@ -29,6 +32,12 @@ namespace EquipmentRentalCore.Controllers
                     .AsNoTracking()
                     .ToListAsync();
             return View(equipmentList);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Create()
+        {
+            return View();
         }
     }
 }

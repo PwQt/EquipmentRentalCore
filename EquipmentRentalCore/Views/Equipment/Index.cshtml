@@ -1,0 +1,69 @@
+﻿@model IEnumerable<EquipmentRentalCore.Models.Equipment>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="col-xs-12">
+    <div class="row">
+        <div class="col-xs-10">
+            <h2>Index</h2>
+        </div>
+        <div class="col-xs-2">
+            <br />
+            <a class="btn btn-info" asp-action="Index" asp-controller="EquipmentType">Manage equipment types</a>
+        </div>
+    </div>
+    <div class="row">
+        @if (User.Identity.IsAuthenticated)
+        {
+            <a asp-action="Create">Create New</a>
+        }
+    </div>
+    <div class="row">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.EquipmentName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Rental)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.EquipmentType)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Room)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EquipmentName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.RentID)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EquipmentType.TypeID)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Room.Id)
+                        </td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.EquipmentID">Edit</a> |
+                            <a asp-action="Details" asp-route-id="@item.EquipmentID">Details</a> |
+                            <a asp-action="Delete" asp-route-id="@item.EquipmentID">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
