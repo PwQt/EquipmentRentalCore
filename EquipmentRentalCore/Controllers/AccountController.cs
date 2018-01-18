@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using EquipmentRentalCore.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace EquipmentRentalCore.Controllers
 {
@@ -17,12 +19,14 @@ namespace EquipmentRentalCore.Controllers
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly ILogger<AccountController> _logger;
+        private readonly EquipmentRentalContext _context;
 
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, ILogger<AccountController> logger)
+        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, ILogger<AccountController> logger, EquipmentRentalContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
+            _context = context;
         }
 
         [HttpGet]
@@ -46,7 +50,7 @@ namespace EquipmentRentalCore.Controllers
                 {
                     _logger.LogInformation("User has been logged in");
                     return RedirectToAction("Index", "Home");
-                } 
+                }
             }
             return View(model);
         }
@@ -100,6 +104,73 @@ namespace EquipmentRentalCore.Controllers
                     ModelState.AddModelError(string.Empty, "Hasła się nie zgadzają!");
             }
             return View(registerViewModel);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Manage(string returnUrl = null)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+                throw new ApplicationException($"Unable to load user '{_userManager.GetUserId(User)}'");
+
+            var model = new Models.AccountViewModels.ManageUserViewModel
+            {
+                Username = user.UserName,
+                Id = user.Id,
+                FirstName = user.Name,
+                Surname = user.Surname,
+                PasswordEditViewModel = new Models.AccountViewModels.PasswordEditViewModel()
+            };
+
+            return View(model);
+        }
+
+        public async Task<IActionResult> Manage(Models.AccountViewModels.ManageUserViewModel model, string returnUrl = null)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+            if (ModelState.IsValid)
+            {
+                var userToEdit = await _userManager.GetUserAsync(User);
+                userToEdit.Name = model.FirstName;
+                userToEdit.Surname = model.Surname;
+                await _userManager.UpdateAsync(userToEdit);
+                return RedirectToAction("Index", "Home");
+            }
+            return View(model);
+
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EditPassword(string returnUrl = null)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+            return PartialView();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditPassword(Models.AccountViewModels.ManageUserViewModel model, string returnUrl = null)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.GetUserAsync(User);
+
+                if (!model.PasswordEditViewModel.NewPassword.Equals(model.PasswordEditViewModel.NewPasswordConfirmation))
+                {
+                    ModelState.AddModelError(string.Empty, "Your new password does not match your password confirmation");
+                    return RedirectToAction("Manage", "Account");
+                }
+
+                var result = await _userManager.ChangePasswordAsync(user, model.PasswordEditViewModel.OldPassword, model.PasswordEditViewModel.NewPassword);
+                user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, model.PasswordEditViewModel.NewPassword);
+                var resultHash = await _userManager.UpdateAsync(user);
+                if (result.Succeeded && resultHash.Succeeded)
+                    _logger.LogInformation($"Password for user {user.UserName} changed");
+
+            }
+            return RedirectToAction("Manage", "Account");
         }
     }
 }
