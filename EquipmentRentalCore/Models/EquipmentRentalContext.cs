@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EquipmentRentalCore.Models.RoomViewModels;
 
 namespace EquipmentRentalCore.Models
 {
@@ -50,6 +51,8 @@ namespace EquipmentRentalCore.Models
                 .OnDelete(DeleteBehavior.Restrict);
 
         }
+
+        public DbSet<EquipmentRentalCore.Models.RoomViewModels.ManageRoomsModel> ManageRoomsModel { get; set; }
 
     }
 }

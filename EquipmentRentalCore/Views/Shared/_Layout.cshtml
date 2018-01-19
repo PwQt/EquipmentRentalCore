@@ -31,7 +31,14 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li><a asp-area="" asp-controller="Rental" asp-action="Index">Rentals</a></li>
-                    <li><a asp-area="" asp-controller="Equipment" asp-action="Index">Equipments</a></li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" data-original-title title>Equipments</a>
+                        <ul class="dropdown-menu">
+                            <li><a asp-area="" asp-controller="Equipment" asp-action="Index">Equipments</a></li>
+                            <li><a asp-area="" asp-controller="EquipmentType" asp-action="Index">Equipment Types</a></li>
+                            <li><a asp-area="" asp-controller="Room" asp-action="Index">Rooms</a></li>
+                        </ul>
+                    </li>
                 </ul>
                 @if (!User.Identity.IsAuthenticated)
                 {

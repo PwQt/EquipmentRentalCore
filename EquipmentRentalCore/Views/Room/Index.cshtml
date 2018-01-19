@@ -19,7 +19,7 @@
         <table class="table table-condensed table-hover">
             <thead>
                 <tr>
-                    <th>Lp.</th>
+                    <th><label>No.</label></th>
                     <th>
                         <label asp-for="FirstOrDefault().RoomName"></label>
                     </th>
@@ -37,7 +37,7 @@
                             @index
                         </td>
                         <td>
-                            @Model[i].RoomName
+                            <a asp-action="Details" asp-controller="Room" asp-route-id="@Model[i].Id">@Model[i].RoomName</a>
                         </td>
                         <td>
                             @if (Model[i].EquipmentAttachedList.Count > 0)
