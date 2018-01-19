@@ -113,6 +113,7 @@ namespace EquipmentRentalCore.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Rent(RentAddModel model, string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
@@ -136,6 +137,36 @@ namespace EquipmentRentalCore.Controllers
                     return RedirectToAction("Index", "Rental");
             }
             return View(model);
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> _ProlongRentalModal(int id, string returnUrl = null)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+            var elementToProlong = await _context.Rentals.FirstOrDefaultAsync(x => x.RentalID == id);
+
+            var rent = new RentListModel
+            {
+                ProlongModalData = new ProlongationRentalModel
+                {
+                    RentID = id,
+                }
+            };
+            return PartialView(rent);
+        }
+        
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> _ProlongRentalModal(RentListModel model, string returnUrl = null)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+            var elementToEdit = await _context.Rentals.FirstOrDefaultAsync(x => x.RentalID == model.ProlongModalData.RentID);
+            elementToEdit.RentalEnd = elementToEdit.RentalEnd.AddMonths(model.ProlongModalData.MonthProlongation);
+            _context.Entry(elementToEdit).State = EntityState.Modified;
+            var result = await _context.SaveChangesAsync();
+            return RedirectToAction("Index");
         }
     }
 }

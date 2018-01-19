@@ -23,5 +23,7 @@ namespace EquipmentRentalCore.Models.RentViewModels
         [DataType(DataType.Date)]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:d}")]
         public DateTime RentEndDate { get; set; }
+
+        public ProlongationRentalModel ProlongModalData { get; set; }
     }
 }
