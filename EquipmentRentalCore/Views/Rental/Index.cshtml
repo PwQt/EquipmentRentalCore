@@ -1,55 +1,72 @@
-﻿@model IEnumerable<EquipmentRentalCore.Models.Rental>
+﻿@model List<EquipmentRentalCore.Models.RentViewModels.RentListModel>
 
 @{
-    ViewData["Title"] = "Rentals";
+    ViewData["Title"] = "Rented equipments list";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var counter = 1;
 }
 
-<h2>Rentals</h2>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.RentalStart)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.RentalEnd)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.RentalEquipment.EquipmentName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.RentalUser.Name)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.RentalStart)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.RentalEnd)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.RentalEquipment.EquipmentName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.RentalUser.Name)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.RentalID">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.RentalID">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.RentalID">Delete</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<div class="col-xs-12">
+    <div class="row">
+        <div class="col-xs-10">
+            <h2>@ViewData["Title"]</h2>
+        </div>
+        <div class="col-xs-2">
+            <br />
+            <a class="btn btn-success" asp-action="Rent"><span class="glyphicon glyphicon-briefcase"></span> Rent new equipment</a>
+        </div>
+    </div>
+    <div class="row">
+        <table class="table table-condensed table-hover table-striped">
+            <thead>
+                <tr>
+                    <th><label>No.</label></th>
+                    <th>
+                        <label asp-for="FirstOrDefault().RentStartDate"></label>
+                    </th>
+                    <th>
+                        <label asp-for="FirstOrDefault().RentEndDate"></label>
+                    </th>
+                    <th>
+                        <label asp-for="FirstOrDefault().RentedByUser"></label>
+                    </th>
+                    <th>
+                        <label asp-for="FirstOrDefault().EquipmentName"></label>
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Count > 0)
+                {
+                    @for (var i = 0; i < Model.Count; i++)
+                    {
+                        <tr>
+                            <td>
+                                @(counter)
+                            </td>
+                            <td>
+                                @Model[i].RentStartDate.ToShortDateString()
+                            </td>
+                            <td>
+                                @Model[i].RentEndDate.ToShortDateString() <i>(@((Model[i].RentEndDate.Date - DateTime.Today.Date).Days) days left)</i>
+                            </td>
+                            <td>
+                                @Model[i].RentedByUser
+                            </td>
+                            <td>
+                                @Model[i].EquipmentName
+                            </td>
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@Model[i].RentID">Edit</a> |
+                                <a asp-action="Details" asp-route-id="@Model[i].RentID">Details</a> |
+                                <a asp-action="Delete" asp-route-id="@Model[i].RentID">Delete</a>
+                            </td>
+                        </tr>
+                        counter += 1;
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

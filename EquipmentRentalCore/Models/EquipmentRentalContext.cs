@@ -51,8 +51,7 @@ namespace EquipmentRentalCore.Models
                 .OnDelete(DeleteBehavior.Restrict);
 
         }
-
-        public DbSet<EquipmentRentalCore.Models.RoomViewModels.ManageRoomsModel> ManageRoomsModel { get; set; }
+       
 
     }
 }

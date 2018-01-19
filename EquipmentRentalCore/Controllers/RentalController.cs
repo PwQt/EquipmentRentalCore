@@ -3,34 +3,55 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EquipmentRentalCore.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using EquipmentRentalCore.Models.RentViewModels;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Identity;
 
 namespace EquipmentRentalCore.Controllers
 {
     public class RentalController : Controller
     {
         private readonly EquipmentRentalContext _context;
+        private readonly UserManager<User> _userManager;
 
-        public RentalController(EquipmentRentalContext context)
+        public RentalController(EquipmentRentalContext context, UserManager<User> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string returnUrl = null)
         {
+            ViewData["ReturnUrl"] = returnUrl;
             var rentals = await _context.Rentals
                 .Include(r => r.RentalUser)
                 .Include(e => e.RentalEquipment)
                 .AsNoTracking()
                 .ToListAsync();
-            return View(rentals);
+
+            var listToView = new List<RentListModel>();
+            foreach (var item in rentals)
+                listToView.Add(new RentListModel
+                {
+                    RentStartDate = item.RentalStart.Date,
+                    RentEndDate = item.RentalEnd.Date,
+                    RentedByUser = item.RentalUser.Name + " " + item.RentalUser.Surname,
+                    RentID = item.RentalID,
+                    UserID = item.RentalUserID,
+                    EquipmentName = item.RentalEquipment.EquipmentName,
+                    EquipmentID = item.RentalEquipmentID
+                });
+            return View(listToView);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Details(int? id)
+        [HttpGet]
+        public async Task<IActionResult> Details(int? id, string returnUrl = null)
         {
+            ViewData["ReturnUrl"] = returnUrl;
             if (!id.HasValue)
                 return NotFound();
 
@@ -44,6 +65,77 @@ namespace EquipmentRentalCore.Controllers
                 return NotFound();
 
             return View(rental);
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> Rent(int? id, string returnUrl = null)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.UserName.Equals(User.Identity.Name));
+            if (!id.HasValue)
+            {
+                var notRentedEquipmentList = await _context.Equipments.Where(x => !x.RentID.HasValue).ToListAsync();
+                if (notRentedEquipmentList.Any())
+                {
+                    var rent = new RentAddModel()
+                    {
+                        UserID = user.Id,
+                        Username = User.Identity.Name
+                    };
+                    foreach (var item in notRentedEquipmentList)
+                        rent.EquipmentList.Add(new SelectListItem
+                        {
+                            Value = item.EquipmentID.ToString(),
+                            Text = item.EquipmentName
+                        });
+
+                    return View(rent);
+                }
+                return RedirectToAction("NotAvaliable", "Error");
+            }
+            else
+            {
+                var equipment = await _context.Equipments.FirstOrDefaultAsync(x => x.EquipmentID == id);
+                var rent = new RentAddModel
+                {
+                    UserID = user.Id,
+                    Username = User.Identity.Name
+                };
+                rent.EquipmentList.Add(new SelectListItem
+                {
+                    Value = equipment.EquipmentID.ToString(),
+                    Text = equipment.EquipmentName
+                });
+                return View(rent);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Rent(RentAddModel model, string returnUrl = null)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+            if (ModelState.IsValid)
+            {
+                var rentModel = new Rental
+                {
+                    RentalStart = model.RentStart,
+                    RentalEnd = model.RentEnd,
+                    RentalEquipmentID = model.EquipmentID,
+                    RentalUserID = model.UserID
+                };
+                await _context.Rentals.AddAsync(rentModel);
+                var result = await _context.SaveChangesAsync();
+
+                var updateEquipData = await _context.Equipments.FirstOrDefaultAsync(x => x.EquipmentID == model.EquipmentID);
+                updateEquipData.RentID = rentModel.RentalID;
+
+                result = await _context.SaveChangesAsync();
+                if (result > 0)
+                    return RedirectToAction("Index", "Rental");
+            }
+            return View(model);
         }
     }
 }

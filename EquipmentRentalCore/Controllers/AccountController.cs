@@ -40,6 +40,7 @@ namespace EquipmentRentalCore.Controllers
 
         [HttpPost]
         [AllowAnonymous]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(Models.AccountViewModels.LoginViewModel model, string returnUrl = null)
         {
             if (ModelState.IsValid)
