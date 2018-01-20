@@ -37,6 +37,7 @@
                             @index
                         </td>
                         <td>
+
                             @Model[i].Name
                         </td>
                         <td>
@@ -44,12 +45,12 @@
                             {
                                 for (var j = 0; j < Model[i].EquipmentsAttachedList.Count; j++)
                                 {
-                                    <p>@Model[i].EquipmentsAttachedList[j].EquipmentName</p>
+                                    <a asp-action="Details" asp-controller="Equipment" asp-route-id="@Model[i].EquipmentsAttachedList[j].EquipmentID">@Model[i].EquipmentsAttachedList[j].EquipmentName</a>
                                 }
                             }
                             else
                             {
-                                <p>Brak elementów</p>
+                                <p>No elements attached</p>
                             }
                         </td>
                         <td>

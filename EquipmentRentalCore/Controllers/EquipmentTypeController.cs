@@ -133,5 +133,27 @@ namespace EquipmentRentalCore.Controllers
             }
             return View(model);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Details(int? id, string returnUrl = null)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+            if (id.HasValue)
+            {
+                var equipmentType = await _context.EquipmentTypes
+                        .Include(e => e.Equipments)
+                        .AsNoTracking()
+                        .FirstOrDefaultAsync(x => x.TypeID == id);
+                var model = new ListEquipmentTypeViewModel
+                {
+                    Id = equipmentType.TypeID,
+                    Name = equipmentType.TypeName,
+                    EquipmentsAttachedList = equipmentType.Equipments.ToList()
+                };
+                return View(model);
+            }
+            return NotFound();
+
+        }
     }
 }

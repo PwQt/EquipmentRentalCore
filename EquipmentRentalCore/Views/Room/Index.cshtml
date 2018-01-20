@@ -37,19 +37,19 @@
                             @index
                         </td>
                         <td>
-                            <a asp-action="Details" asp-controller="Room" asp-route-id="@Model[i].Id">@Model[i].RoomName</a>
+                            @Model[i].RoomName
                         </td>
                         <td>
                             @if (Model[i].EquipmentAttachedList.Count > 0)
                             {
                                 for (var j = 0; j < Model[i].EquipmentAttachedList.Count; j++)
                                 {
-                                    <p>@Model[i].EquipmentAttachedList[j].EquipmentName</p>
+                                    <a asp-action="Details" asp-controller="Equipment" asp-route-id="@Model[i].EquipmentAttachedList[j].EquipmentID">@Model[i].EquipmentAttachedList[j].EquipmentName</a>
                                 }
                             }
                             else
                             {
-                                <p>Brak elementów</p>
+                                <p>No elements attached</p>
                             }
                         </td>
                         <td>

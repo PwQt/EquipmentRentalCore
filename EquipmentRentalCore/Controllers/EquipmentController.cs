@@ -179,5 +179,31 @@ namespace EquipmentRentalCore.Controllers
             }
             return NotFound();
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Details(int id, string returnUrl = null)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+            var equipment = await _context
+                    .Equipments
+                    .Include(t => t.EquipmentType)
+                    .Include(r => r.Room)
+                    .Include(ren => ren.Rental)
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(x => x.EquipmentID == id);
+
+            var model = new EquipmentListModel
+            {
+                Id = equipment.EquipmentID,
+                EquipmentName = equipment.EquipmentName,
+                EquipmentTypeID = equipment.EquipmentType.TypeID,
+                EquipmentTypeText = equipment.EquipmentType.TypeName,
+                RoomID = equipment.Room.Id,
+                RoomName = equipment.Room.Name,
+                RentID = equipment.Rental != null ? equipment.Rental.RentalID : default(int?),
+                IsRented = equipment.Rental != null ? true : false
+            };
+            return View(model);
+        }
     }
 }

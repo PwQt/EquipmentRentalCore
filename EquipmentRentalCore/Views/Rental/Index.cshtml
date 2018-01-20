@@ -55,7 +55,7 @@
                                 @Model[i].RentedByUser
                             </td>
                             <td>
-                                @Model[i].EquipmentName
+                                <a asp-action="Details" asp-controller="Equipment" asp-route-id="@Model[i].EquipmentID">@Model[i].EquipmentName</a>
                             </td>
                             <td>
                                 @if (User.Identity.IsAuthenticated && User.IsInRole("Service"))
