@@ -27,7 +27,8 @@ namespace EquipmentRentalCore.Controllers
         public async Task<IActionResult> Index(string data = null, string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
-            List<Rental> rentals = new List<Rental>();
+
+            var rentals = new List<Rental>();
             if (data == null)
                 rentals = await _context.Rentals
                     .Include(r => r.RentalUser)

@@ -23,11 +23,19 @@ namespace EquipmentRentalCore.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(string returnUrl = null)
+        public async Task<IActionResult> Index(string returnUrl = null, string data = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
-            var roomList = await _context.Rooms
+            var roomList = new List<Room>();
+
+            if (data == null)
+                roomList = await _context.Rooms
                     .Include(x => x.Equipments)
+                    .ToListAsync();
+            else
+                roomList = await _context.Rooms
+                    .Include(x => x.Equipments)
+                    .Where(x => x.Name.Contains(data))
                     .ToListAsync();
 
             var elements = new List<ListRoomsModel>();

@@ -23,13 +23,23 @@ namespace EquipmentRentalCore.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(string returnUrl = null)
+        public async Task<IActionResult> Index(string returnUrl = null, string data = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
-            var list = await _context.EquipmentTypes
+            var list = new List<EquipmentType>();
+
+            if (data == null)  
+                list = await _context.EquipmentTypes
                     .Include(e => e.Equipments)
                     .AsNoTracking()
                     .ToListAsync();
+            else
+                list = await _context.EquipmentTypes
+                    .Include(e => e.Equipments)
+                    .AsNoTracking()
+                    .Where(x => x.TypeName.Contains(data))
+                    .ToListAsync();
+
 
             var elements = new List<ListEquipmentTypeViewModel>();
             foreach (var item in list)
