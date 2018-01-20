@@ -40,11 +40,11 @@
                             <td>
                                 @for (var j = 0; j < Model[i].UsersList.Count; j++)
                                 {
-                                    <p>@Model[i].UsersList[j].Username <a class="glyphicon glyphicon-remove" asp-controller="Group" asp-action="RemoveUserFromGroup" asp-route-id="@Model[i].UsersList[j].UserID"></a></p>
+                                    <p>@Model[i].UsersList[j].Username <a class="glyphicon glyphicon-remove" asp-controller="Group" asp-action="RemoveUserFromGroup" asp-route-roleid="@Model[i].RoleID" asp-route-id="@Model[i].UsersList[j].UserID"></a></p>
                                 }
                             </td>
                             <td>
-                                <a class="btn btn-sm btn-success" asp-controller="Group" asp-action="AddUserToGroup" asp-route-id="@Model[i].RoleID"><span class="glyphicon glyphicon-plus"></span> Add user to group</a>
+                                <a class="btn btn-sm btn-success" data-toggle="modal" data-target="#AddUserToGroupModal" onclick="javascript:ToggleAdditionModal(@Model[i].RoleID)"><span class="glyphicon glyphicon-plus"></span> Add user to group</a>
                             </td>
                         </tr>
                         counter += 1;
@@ -54,4 +54,23 @@
         </table>
     </div>
 </div>
+<div class="modal fade" id="AddUserToGroupModal">
+    <div class="modal-dialog">
+        <div id="addUserContent">
 
+        </div>
+    </div>
+</div>
+<script>
+    function ToggleAdditionModal(rentId) {
+        $.ajax({
+            url: "@Url.Action("_AddUserToRole", "Group")",
+            type: "GET",
+            data: { id : rentId },
+            success: function (result) {
+                $("#addUserContent").html(result);
+                $("#AddUserToGroupModal").modal('show');
+            }
+        });
+    }
+</script>
