@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace EquipmentRentalCore.Migrations
 {
-    public partial class Roles2 : Migration
+    public partial class Roles : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -17,36 +17,53 @@ namespace EquipmentRentalCore.Migrations
                 name: "FK_AspNetUserRoles_AspNetRoles_RoleId",
                 table: "AspNetUserRoles");
 
-            migrationBuilder.DropForeignKey(
-                name: "FK_UserGroups_Groups_GroupID",
-                table: "UserGroups");
-
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
+            migrationBuilder.DropTable(
+                name: "UserGroups");
+
             migrationBuilder.DropPrimaryKey(
                 name: "PK_Groups",
+                table: "Groups");
+
+            migrationBuilder.DropColumn(
+                name: "GroupName",
+                table: "Groups");
+
+            migrationBuilder.DropColumn(
+                name: "IsAdmin",
+                table: "Groups");
+
+            migrationBuilder.DropColumn(
+                name: "IsService",
                 table: "Groups");
 
             migrationBuilder.RenameTable(
                 name: "Groups",
                 newName: "AspNetRoles");
 
-            migrationBuilder.AlterColumn<string>(
-                name: "NormalizedName",
+            migrationBuilder.RenameColumn(
+                name: "GroupID",
                 table: "AspNetRoles",
-                maxLength: 256,
-                nullable: true,
-                oldClrType: typeof(string),
-                oldNullable: true);
+                newName: "Id");
 
-            migrationBuilder.AlterColumn<string>(
+            migrationBuilder.AddColumn<string>(
+                name: "ConcurrencyStamp",
+                table: "AspNetRoles",
+                nullable: true);
+
+            migrationBuilder.AddColumn<string>(
                 name: "Name",
                 table: "AspNetRoles",
                 maxLength: 256,
-                nullable: true,
-                oldClrType: typeof(string),
-                oldNullable: true);
+                nullable: true);
+
+            migrationBuilder.AddColumn<string>(
+                name: "NormalizedName",
+                table: "AspNetRoles",
+                maxLength: 256,
+                nullable: true);
 
             migrationBuilder.AddPrimaryKey(
                 name: "PK_AspNetRoles",
@@ -75,14 +92,6 @@ namespace EquipmentRentalCore.Migrations
                 principalTable: "AspNetRoles",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_UserGroups_AspNetRoles_GroupID",
-                table: "UserGroups",
-                column: "GroupID",
-                principalTable: "AspNetRoles",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -95,10 +104,6 @@ namespace EquipmentRentalCore.Migrations
                 name: "FK_AspNetUserRoles_AspNetRoles_RoleId",
                 table: "AspNetUserRoles");
 
-            migrationBuilder.DropForeignKey(
-                name: "FK_UserGroups_AspNetRoles_GroupID",
-                table: "UserGroups");
-
             migrationBuilder.DropPrimaryKey(
                 name: "PK_AspNetRoles",
                 table: "AspNetRoles");
@@ -107,30 +112,48 @@ namespace EquipmentRentalCore.Migrations
                 name: "RoleNameIndex",
                 table: "AspNetRoles");
 
+            migrationBuilder.DropColumn(
+                name: "ConcurrencyStamp",
+                table: "AspNetRoles");
+
+            migrationBuilder.DropColumn(
+                name: "Name",
+                table: "AspNetRoles");
+
+            migrationBuilder.DropColumn(
+                name: "NormalizedName",
+                table: "AspNetRoles");
+
             migrationBuilder.RenameTable(
                 name: "AspNetRoles",
                 newName: "Groups");
 
-            migrationBuilder.AlterColumn<string>(
-                name: "NormalizedName",
+            migrationBuilder.RenameColumn(
+                name: "Id",
                 table: "Groups",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldMaxLength: 256,
-                oldNullable: true);
+                newName: "GroupID");
 
-            migrationBuilder.AlterColumn<string>(
-                name: "Name",
+            migrationBuilder.AddColumn<string>(
+                name: "GroupName",
                 table: "Groups",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldMaxLength: 256,
-                oldNullable: true);
+                nullable: true);
+
+            migrationBuilder.AddColumn<bool>(
+                name: "IsAdmin",
+                table: "Groups",
+                nullable: false,
+                defaultValue: false);
+
+            migrationBuilder.AddColumn<bool>(
+                name: "IsService",
+                table: "Groups",
+                nullable: false,
+                defaultValue: false);
 
             migrationBuilder.AddPrimaryKey(
                 name: "PK_Groups",
                 table: "Groups",
-                column: "Id");
+                column: "GroupID");
 
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
@@ -147,12 +170,48 @@ namespace EquipmentRentalCore.Migrations
                     table.PrimaryKey("PK_AspNetRoles", x => x.Id);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "UserGroups",
+                columns: table => new
+                {
+                    UserGroupsID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    GroupID = table.Column<int>(nullable: false),
+                    UserID = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserGroups", x => x.UserGroupsID);
+                    table.ForeignKey(
+                        name: "FK_UserGroups_Groups_GroupID",
+                        column: x => x.GroupID,
+                        principalTable: "Groups",
+                        principalColumn: "GroupID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_UserGroups_AspNetUsers_UserID",
+                        column: x => x.UserID,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",
                 table: "AspNetRoles",
                 column: "NormalizedName",
                 unique: true,
                 filter: "[NormalizedName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserGroups_GroupID",
+                table: "UserGroups",
+                column: "GroupID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserGroups_UserID",
+                table: "UserGroups",
+                column: "UserID");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_AspNetRoleClaims_AspNetRoles_RoleId",
@@ -169,14 +228,6 @@ namespace EquipmentRentalCore.Migrations
                 principalTable: "AspNetRoles",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_UserGroups_Groups_GroupID",
-                table: "UserGroups",
-                column: "GroupID",
-                principalTable: "Groups",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
         }
     }
 }

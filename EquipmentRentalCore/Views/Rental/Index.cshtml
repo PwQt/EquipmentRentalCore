@@ -58,7 +58,7 @@
                                 @Model[i].EquipmentName
                             </td>
                             <td>
-                                @if (User.Identity.IsAuthenticated)
+                                @if (User.Identity.IsAuthenticated && User.IsInRole("Service"))
                                 {
                                     <a class="btn btn-sm btn-default" data-target="#ProlongationModal" data-toggle="modal" onclick="javascript:ToggleProlongModal(@Model[i].RentID)"><span class="glyphicon glyphicon-time"></span> Prolong</a>
                                     <a class="btn btn-sm btn-primary" data-target="#ConfirmDeleteModal" data-toggle="modal" onclick="javascript:ToggleConfirmRetrievalModal(@Model[i].RentID)"><span class="glyphicon glyphicon-arrow-down"></span> Confirm retrieval</a>

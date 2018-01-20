@@ -68,6 +68,8 @@ namespace EquipmentRentalCore.Migrations
                     b.Property<string>("NormalizedName")
                         .HasMaxLength(256);
 
+                    b.Property<int>("RoleId");
+
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedName")

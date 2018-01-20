@@ -15,7 +15,7 @@ namespace EquipmentRentalCore.Models
         {
 
         }
-        
+
         public DbSet<Equipment> Equipments { get; set; }
         public DbSet<EquipmentType> EquipmentTypes { get; set; }
         public DbSet<Rental> Rentals { get; set; }
@@ -27,6 +27,9 @@ namespace EquipmentRentalCore.Models
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<User>()
+                .HasKey(x => x.Id);
+
+            modelBuilder.Entity<Group>()
                 .HasKey(x => x.Id);
 
             modelBuilder.Entity<Rental>()

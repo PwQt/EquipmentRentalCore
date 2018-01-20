@@ -8,6 +8,6 @@ namespace EquipmentRentalCore.Models
 {
     public class Group : IdentityRole<int>
     {
-        public int Id { get; set; }
+        public int RoleId { get; set; }
     }
 }

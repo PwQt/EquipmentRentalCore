@@ -6,13 +6,14 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.Internal;
+using Microsoft.EntityFrameworkCore.ValueGeneration;
 using System;
 
 namespace EquipmentRentalCore.Migrations
 {
     [DbContext(typeof(EquipmentRentalContext))]
-    [Migration("20180120112052_Roles3")]
-    partial class Roles3
+    [Migration("20180120123920_UserGroups")]
+    partial class UserGroups
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -230,11 +231,14 @@ namespace EquipmentRentalCore.Migrations
 
                     b.Property<int>("RoleId");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired();
+
                     b.HasKey("UserId", "RoleId");
 
-                    b.HasIndex("RoleId");
-
                     b.ToTable("AspNetUserRoles");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUserRole<int>");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
@@ -250,6 +254,18 @@ namespace EquipmentRentalCore.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("EquipmentRentalCore.Models.UserGroups", b =>
+                {
+                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUserRole<int>");
+
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("UserGroups");
+
+                    b.HasDiscriminator().HasValue("UserGroups");
                 });
 
             modelBuilder.Entity("EquipmentRentalCore.Models.Equipment", b =>
@@ -302,23 +318,23 @@ namespace EquipmentRentalCore.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
                 {
-                    b.HasOne("EquipmentRentalCore.Models.Group")
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("EquipmentRentalCore.Models.User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
+            modelBuilder.Entity("EquipmentRentalCore.Models.UserGroups", b =>
                 {
-                    b.HasOne("EquipmentRentalCore.Models.User")
-                        .WithMany()
+                    b.HasOne("EquipmentRentalCore.Models.Group", "Group")
+                        .WithMany("UserGroups")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("EquipmentRentalCore.Models.User", "User")
+                        .WithMany("UserGroups")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

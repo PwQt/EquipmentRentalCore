@@ -140,7 +140,7 @@ namespace EquipmentRentalCore.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "Service")]
         public async Task<IActionResult> _ProlongRentalModal(int id, string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
@@ -157,7 +157,7 @@ namespace EquipmentRentalCore.Controllers
         }
         
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "Service")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> _ProlongRentalModal(RentListModel model, string returnUrl = null)
         {
@@ -170,7 +170,7 @@ namespace EquipmentRentalCore.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "Service")]
         public async Task<IActionResult> _ConfirmDeleteModal(int id, string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
@@ -183,7 +183,7 @@ namespace EquipmentRentalCore.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "Service")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> _ConfirmDeleteModal(RentListModel model, string returnUrl = null)
         {

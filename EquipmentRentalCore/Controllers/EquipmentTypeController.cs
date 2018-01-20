@@ -38,7 +38,7 @@ namespace EquipmentRentalCore.Controllers
             return View(elements);
         }
 
-        [Authorize]
+        [Authorize(Roles = "Service")]
         [HttpGet]
         public async Task<IActionResult> Edit(int id, string returnUrl = null)
         {
@@ -59,7 +59,7 @@ namespace EquipmentRentalCore.Controllers
             }
         }
 
-        [Authorize]
+        [Authorize(Roles = "Service")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(ManageEquipmentTypeModel model, string returnUrl = null)
@@ -79,7 +79,7 @@ namespace EquipmentRentalCore.Controllers
             return View(model);
         }
 
-        [Authorize]
+        [Authorize(Roles = "Service")]
         [HttpGet]
         public async Task<IActionResult> Delete(int id, string returnUrl = null)
         {
@@ -96,7 +96,7 @@ namespace EquipmentRentalCore.Controllers
             return NotFound();
         }
 
-        [Authorize]
+        [Authorize(Roles = "Service")]
         [HttpGet]
         public IActionResult Create(string returnUrl = null)
         {
@@ -104,7 +104,7 @@ namespace EquipmentRentalCore.Controllers
             return View(new ManageEquipmentTypeModel());
         }
 
-        [Authorize]
+        [Authorize(Roles = "Service")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ManageEquipmentTypeModel model, string returnUrl = null)

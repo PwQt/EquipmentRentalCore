@@ -90,11 +90,11 @@ namespace EquipmentRentalCore.Controllers
                     user.Password = registerViewModel.Password;
                     user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, registerViewModel.Password);
                     var result = await _userManager.CreateAsync(user);
-                    _logger.LogInformation("User has been created");
                     if (result.Succeeded)
                     {
-                        var identityResult = await _userManager.AddToRoleAsync(user, "User");
-
+                        _logger.LogInformation("User has been created");
+                        var role = await _roleManager.FindByNameAsync("User");
+                        result = await _userManager.AddToRoleAsync(user, role.Name);
                         await _signInManager.SignInAsync(user, isPersistent: false);
                         return RedirectToAction("Index", "Home");
                     }

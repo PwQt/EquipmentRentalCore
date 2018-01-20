@@ -11,8 +11,8 @@ using System;
 namespace EquipmentRentalCore.Migrations
 {
     [DbContext(typeof(EquipmentRentalContext))]
-    [Migration("20180120104308_Roles")]
-    partial class Roles
+    [Migration("20180120130910_UserGroupsAdd")]
+    partial class UserGroupsAdd
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,30 +20,6 @@ namespace EquipmentRentalCore.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.0.1-rtm-125")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("EquipmentRentalCore.Models.ApplicationRole", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken();
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(256);
-
-                    b.Property<string>("NormalizedName")
-                        .HasMaxLength(256);
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedName")
-                        .IsUnique()
-                        .HasName("RoleNameIndex")
-                        .HasFilter("[NormalizedName] IS NOT NULL");
-
-                    b.ToTable("AspNetRoles");
-                });
 
             modelBuilder.Entity("EquipmentRentalCore.Models.Equipment", b =>
                 {
@@ -84,23 +60,25 @@ namespace EquipmentRentalCore.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("ConcurrencyStamp");
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken();
 
-                    b.Property<int>("GroupID");
+                    b.Property<string>("Name")
+                        .HasMaxLength(256);
 
-                    b.Property<string>("GroupName");
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256);
 
-                    b.Property<bool>("IsAdmin");
-
-                    b.Property<bool>("IsService");
-
-                    b.Property<string>("Name");
-
-                    b.Property<string>("NormalizedName");
+                    b.Property<int>("RoleId");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Groups");
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasName("RoleNameIndex")
+                        .HasFilter("[NormalizedName] IS NOT NULL");
+
+                    b.ToTable("AspNetRoles");
                 });
 
             modelBuilder.Entity("EquipmentRentalCore.Models.Rental", b =>
@@ -193,24 +171,6 @@ namespace EquipmentRentalCore.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
-                });
-
-            modelBuilder.Entity("EquipmentRentalCore.Models.UserGroups", b =>
-                {
-                    b.Property<int>("UserGroupsID")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("GroupID");
-
-                    b.Property<int>("UserID");
-
-                    b.HasKey("UserGroupsID");
-
-                    b.HasIndex("GroupID");
-
-                    b.HasIndex("UserID");
-
-                    b.ToTable("UserGroups");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -320,22 +280,9 @@ namespace EquipmentRentalCore.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-            modelBuilder.Entity("EquipmentRentalCore.Models.UserGroups", b =>
-                {
-                    b.HasOne("EquipmentRentalCore.Models.Group", "Group")
-                        .WithMany("UserGroups")
-                        .HasForeignKey("GroupID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("EquipmentRentalCore.Models.User", "User")
-                        .WithMany("UserGroups")
-                        .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.Restrict);
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
-                    b.HasOne("EquipmentRentalCore.Models.ApplicationRole")
+                    b.HasOne("EquipmentRentalCore.Models.Group")
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -359,7 +306,7 @@ namespace EquipmentRentalCore.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
                 {
-                    b.HasOne("EquipmentRentalCore.Models.ApplicationRole")
+                    b.HasOne("EquipmentRentalCore.Models.Group")
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade);
