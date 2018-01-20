@@ -63,7 +63,7 @@
                                     <a class="btn btn-sm btn-default" data-target="#ProlongationModal" data-toggle="modal" onclick="javascript:ToggleProlongModal(@Model[i].RentID)"><span class="glyphicon glyphicon-time"></span> Prolong</a>
                                     <a class="btn btn-sm btn-primary" data-target="#ConfirmDeleteModal" data-toggle="modal" onclick="javascript:ToggleConfirmRetrievalModal(@Model[i].RentID)"><span class="glyphicon glyphicon-arrow-down"></span> Confirm retrieval</a>
                                 }
-                                <a asp-action="Details" asp-route-id="@Model[i].RentID"> Details</a>
+                                <a class="btn btn-sm btn-info" asp-action="Details" asp-route-id="@Model[i].RentID"><span class="glyphicon glyphicon-expand"></span> Details</a>
                             </td>
                         </tr>
                         counter += 1;

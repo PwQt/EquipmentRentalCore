@@ -9,6 +9,10 @@ namespace EquipmentRentalCore.Models.RoomViewModels
 {
     public class ListRoomsModel
     {
+        public ListRoomsModel()
+        {
+            EquipmentAttachedList = new List<Equipment>();
+        }
         [HiddenInput]
         public int Id { get; set; }
         [Display(Name = "Room name or number")]

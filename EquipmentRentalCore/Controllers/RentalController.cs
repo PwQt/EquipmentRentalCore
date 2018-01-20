@@ -74,7 +74,18 @@ namespace EquipmentRentalCore.Controllers
             if (rental == null)
                 return NotFound();
 
-            return View(rental);
+            var model = new RentListModel
+            {
+                RentStartDate = rental.RentalStart.Date,
+                RentEndDate = rental.RentalEnd.Date,
+                RentedByUser = rental.RentalUser.Name + " " + rental.RentalUser.Surname,
+                RentID = rental.RentalID,
+                UserID = rental.RentalUserID,
+                EquipmentName = rental.RentalEquipment.EquipmentName,
+                EquipmentID = rental.RentalEquipmentID
+            };
+
+            return View(model);
         }
 
         [HttpGet]

@@ -4,45 +4,45 @@
     ViewData["Title"] = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-<h2>Details</h2>
-
-<div class="col-xs-12">
-    <h4>Room <strong>@Model.RoomName</strong> details</h4>
+<br />
+<div class="container">
+    <div class="row">
+        <h3>Room <strong>@Model.RoomName</strong> details</h3>
+    </div>
     <hr />
     <div class="row">
-        <div class="col-xs-6">
-            <div class="row">
-                <div class="col-xs-4">
-                    @Html.DisplayNameFor(model => model.RoomName)
-                </div>
-                <div class="col-xs-8">
-                    @Html.DisplayFor(model => model.RoomName)
-                </div>
+        <div class="row">
+            <div class="col-xs-4">
+                <label asp-for="RoomName" class="control-label"></label>
             </div>
-            <div class="row">
-                <div class="col-xs-4">
-                    @Html.DisplayNameFor(model => model.EquipmentAttachedList)
-                </div>
-                <div class="col-xs-8">
+            <div class="col-xs-8">
+                @Html.DisplayFor(model => model.RoomName)
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-4">
+                <label asp-for="EquipmentAttachedList" class="control-label"></label>
+            </div>
+            <div class="col-xs-8">
+                <ul>
                     @if (Model.EquipmentAttachedList.Count > 0)
                     {
                         for (var i = 0; i < Model.EquipmentAttachedList.Count; i++)
                         {
-                            <p>@Model.EquipmentAttachedList[i].EquipmentName</p>
+                            <li style="list-style-type:none;"><a asp-action="Details" asp-controller="Equipment" asp-route-id="@Model.EquipmentAttachedList[i].EquipmentID">@Model.EquipmentAttachedList[i].EquipmentName</a></li>
                         }
                     }
                     else
                     {
-                        <p>No equipment placed inside this room</p>
+                        <li>No equipment placed inside this room</li>
                     }
-                </div>
+                </ul>
             </div>
         </div>
     </div>
     <br />
     <div class="row">
-        <a class="btn btn-sm btn-info" asp-action="Index">Back to list of rooms-</a>
+        <a class="btn btn-sm btn-info" asp-action="Index">Back to list of rooms</a>
     </div>
     <br />
 </div>

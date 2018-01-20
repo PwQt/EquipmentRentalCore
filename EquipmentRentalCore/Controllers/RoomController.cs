@@ -139,7 +139,9 @@ namespace EquipmentRentalCore.Controllers
         [HttpGet]
         public async Task<IActionResult> Details(int id, string returnUrl = null)
         {
-            var element = await _context.Rooms.FirstOrDefaultAsync(x => x.Id.Equals(id));
+            var element = await _context.Rooms
+                .Include(e => e.Equipments)
+                .FirstOrDefaultAsync(x => x.Id.Equals(id));
 
             if (element != null)
             {
@@ -147,7 +149,7 @@ namespace EquipmentRentalCore.Controllers
                 {
                     Id = element.Id,
                     RoomName = element.Name,
-                    EquipmentAttachedList = element.Equipments != null ? element.Equipments.ToList() : new List<Equipment>()
+                    EquipmentAttachedList = element.Equipments.ToList()
                 };
                 return View(item);
             }
