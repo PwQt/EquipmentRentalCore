@@ -24,14 +24,23 @@ namespace EquipmentRentalCore.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(string returnUrl = null)
+        public async Task<IActionResult> Index(string data = null, string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
-            var rentals = await _context.Rentals
-                .Include(r => r.RentalUser)
-                .Include(e => e.RentalEquipment)
-                .AsNoTracking()
-                .ToListAsync();
+            List<Rental> rentals = new List<Rental>();
+            if (data == null)
+                rentals = await _context.Rentals
+                    .Include(r => r.RentalUser)
+                    .Include(e => e.RentalEquipment)
+                    .AsNoTracking()
+                    .ToListAsync();
+            else
+                rentals = await _context.Rentals
+                    .Include(r => r.RentalUser)
+                    .Include(e => e.RentalEquipment)
+                    .AsNoTracking()
+                    .Where(x => x.RentalUser.Name.Contains(data) || x.RentalUser.Surname.Contains(data))
+                    .ToListAsync();
 
             var listToView = new List<RentListModel>();
             foreach (var item in rentals)
