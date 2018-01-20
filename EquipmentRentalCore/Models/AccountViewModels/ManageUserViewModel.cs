@@ -20,6 +20,9 @@ namespace EquipmentRentalCore.Models.AccountViewModels
         [StringLength(50, ErrorMessage = "Your surname is too long!")]
         public string Surname { get; set; }
 
+        [Display(Name = "Groups to which user belongs")]
+        public List<GroupViewModel> GroupList { get; set; }
+
         public PasswordEditViewModel PasswordEditViewModel { get; set; }
     }
 }

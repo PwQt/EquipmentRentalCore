@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using EquipmentRentalCore.Extensions;
 using EquipmentRentalCore.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -24,6 +25,7 @@ namespace EquipmentRentalCore
                 try
                 {
                     var context = services.GetRequiredService<EquipmentRentalContext>();
+                    DBGroupsInitializer.OnInitialize(context);
                 }
                 catch (Exception ex)
                 {

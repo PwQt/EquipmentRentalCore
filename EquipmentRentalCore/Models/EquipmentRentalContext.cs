@@ -9,7 +9,7 @@ using EquipmentRentalCore.Models.RoomViewModels;
 
 namespace EquipmentRentalCore.Models
 {
-    public class EquipmentRentalContext : IdentityDbContext<User, ApplicationRole, int>
+    public class EquipmentRentalContext : IdentityDbContext<User, Group, int>
     {
         public EquipmentRentalContext(DbContextOptions<EquipmentRentalContext> options) : base(options)
         {
@@ -20,6 +20,7 @@ namespace EquipmentRentalCore.Models
         public DbSet<EquipmentType> EquipmentTypes { get; set; }
         public DbSet<Rental> Rentals { get; set; }
         public DbSet<Room> Rooms { get; set; }
+        public DbSet<Group> Groups { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -49,9 +50,6 @@ namespace EquipmentRentalCore.Models
                 .WithMany(r => r.Equipments)
                 .HasForeignKey(x => x.RoomID)
                 .OnDelete(DeleteBehavior.Restrict);
-
         }
-       
-
     }
 }

@@ -168,5 +168,36 @@ namespace EquipmentRentalCore.Controllers
             var result = await _context.SaveChangesAsync();
             return RedirectToAction("Index");
         }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> _ConfirmDeleteModal(int id, string returnUrl = null)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+            var element = await _context.Rentals.FirstOrDefaultAsync(x => x.RentalID == id);
+            var rent = new RentListModel
+            {
+                RentID = element.RentalID
+            };
+            return PartialView(rent);
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> _ConfirmDeleteModal(RentListModel model, string returnUrl = null)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+            var elementToDelete = await _context.Rentals.FirstOrDefaultAsync(x => x.RentalID == model.RentID);
+            _context.Rentals.Remove(elementToDelete);
+            var result = await _context.SaveChangesAsync();
+
+            var equipmentToModify = await _context.Equipments.FirstOrDefaultAsync(x => x.RentID == model.RentID);
+            equipmentToModify.RentID = null;
+            _context.Entry(equipmentToModify).State = EntityState.Modified;
+            result = await _context.SaveChangesAsync();
+
+            return RedirectToAction("Index");
+        }
     }
 }

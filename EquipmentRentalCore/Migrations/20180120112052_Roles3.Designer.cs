@@ -11,9 +11,10 @@ using System;
 namespace EquipmentRentalCore.Migrations
 {
     [DbContext(typeof(EquipmentRentalContext))]
-    partial class EquipmentRentalContextModelSnapshot : ModelSnapshot
+    [Migration("20180120112052_Roles3")]
+    partial class Roles3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

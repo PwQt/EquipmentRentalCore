@@ -27,7 +27,7 @@ namespace EquipmentRentalCore
             services.AddDbContext<EquipmentRentalContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<User, ApplicationRole>()
+            services.AddIdentity<User, Group>()
                 .AddEntityFrameworkStores<EquipmentRentalContext>()
                 .AddDefaultTokenProviders();
             

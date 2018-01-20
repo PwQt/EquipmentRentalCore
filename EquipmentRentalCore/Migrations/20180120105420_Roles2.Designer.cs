@@ -11,9 +11,10 @@ using System;
 namespace EquipmentRentalCore.Migrations
 {
     [DbContext(typeof(EquipmentRentalContext))]
-    partial class EquipmentRentalContextModelSnapshot : ModelSnapshot
+    [Migration("20180120105420_Roles2")]
+    partial class Roles2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -61,6 +62,14 @@ namespace EquipmentRentalCore.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
+
+                    b.Property<int>("GroupID");
+
+                    b.Property<string>("GroupName");
+
+                    b.Property<bool>("IsAdmin");
+
+                    b.Property<bool>("IsService");
 
                     b.Property<string>("Name")
                         .HasMaxLength(256);
@@ -170,6 +179,24 @@ namespace EquipmentRentalCore.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("EquipmentRentalCore.Models.UserGroups", b =>
+                {
+                    b.Property<int>("UserGroupsID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("GroupID");
+
+                    b.Property<int>("UserID");
+
+                    b.HasKey("UserGroupsID");
+
+                    b.HasIndex("GroupID");
+
+                    b.HasIndex("UserID");
+
+                    b.ToTable("UserGroups");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
                     b.Property<int>("Id")
@@ -274,6 +301,19 @@ namespace EquipmentRentalCore.Migrations
                     b.HasOne("EquipmentRentalCore.Models.User", "RentalUser")
                         .WithMany("Rentals")
                         .HasForeignKey("RentalUserID")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("EquipmentRentalCore.Models.UserGroups", b =>
+                {
+                    b.HasOne("EquipmentRentalCore.Models.Group", "Group")
+                        .WithMany("UserGroups")
+                        .HasForeignKey("GroupID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("EquipmentRentalCore.Models.User", "User")
+                        .WithMany("UserGroups")
+                        .HasForeignKey("UserID")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 

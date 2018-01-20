@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace EquipmentRentalCore.Models
 {
-    public class ApplicationRole : IdentityRole<int>
+    public class Group : IdentityRole<int>
     {
+        public int Id { get; set; }
     }
 }

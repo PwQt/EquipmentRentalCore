@@ -19,13 +19,15 @@ namespace EquipmentRentalCore.Controllers
         private readonly SignInManager<User> _signInManager;
         private readonly ILogger<AccountController> _logger;
         private readonly EquipmentRentalContext _context;
+        private readonly RoleManager<Group> _roleManager;
 
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, ILogger<AccountController> logger, EquipmentRentalContext context)
+        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, ILogger<AccountController> logger, EquipmentRentalContext context, RoleManager<Group> roleManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _context = context;
+            _roleManager = roleManager;
         }
 
         [HttpGet]
@@ -91,6 +93,8 @@ namespace EquipmentRentalCore.Controllers
                     _logger.LogInformation("User has been created");
                     if (result.Succeeded)
                     {
+                        var identityResult = await _userManager.AddToRoleAsync(user, "User");
+
                         await _signInManager.SignInAsync(user, isPersistent: false);
                         return RedirectToAction("Index", "Home");
                     }
@@ -114,12 +118,28 @@ namespace EquipmentRentalCore.Controllers
             if (user == null)
                 throw new ApplicationException($"Unable to load user '{_userManager.GetUserId(User)}'");
 
+            var grpList = new List<Models.AccountViewModels.GroupViewModel>();
+            var groupIDList = new List<int>();
+            foreach (var item in _context.UserRoles.Where(x => x.UserId == user.Id))
+                groupIDList.Add(item.RoleId);
+
+
+            foreach (var item in groupIDList)
+            {
+                var element = await _roleManager.FindByIdAsync(item.ToString());
+                grpList.Add(new Models.AccountViewModels.GroupViewModel
+                {
+                    GroupName = element.Name,
+                    GroupID = element.Id
+                });
+            }
             var model = new Models.AccountViewModels.ManageUserViewModel
             {
                 Username = user.UserName,
                 Id = user.Id,
                 FirstName = user.Name,
                 Surname = user.Surname,
+                GroupList = grpList,
                 PasswordEditViewModel = new Models.AccountViewModels.PasswordEditViewModel()
             };
 

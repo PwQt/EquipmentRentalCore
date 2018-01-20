@@ -1,0 +1,23 @@
+﻿@model EquipmentRentalCore.Models.RentViewModels.RentListModel
+
+<div class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Confirm retrieval of equipment</h4>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-md-12">
+                <form asp-area="" asp-controller="Rental" asp-action="_ConfirmDeleteModal" method="post">
+                    <input hidden asp-for="RentID" />
+                    <div class="form-group">
+                        Please confirm the retrieval of this equipment
+                    </div>
+
+                    <button type="submit" class="btn btn-warning">Confirm</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
